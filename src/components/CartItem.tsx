@@ -33,7 +33,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
     };
 
     return (
-        <Card className="overflow-hidden border-0 shadow-md bg-white">
+        <Card className="overflow-hidden border-0 shadow-md bg-white dark:bg-gray-950">
             <CardContent className="p-4">
                 <div className="flex items-center gap-4">
                     {/* Imagem do produto */}
@@ -47,7 +47,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
                     {/* Informações do produto */}
                     <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-800 truncate">{item.name}</h3>
+                        <h3 className="font-semibold text-gray-800 dark:text-gray-200 truncate">{item.name}</h3>
                         <p className="text-lg font-bold text-blue-600 mt-1">
                             R$ {item.price.toFixed(2)}
                         </p>
@@ -80,14 +80,14 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
 
                     {/* Subtotal e remover */}
                     <div className="text-right">
-                        <p className="font-bold text-lg text-gray-800">
+                        <p className="font-bold text-lg text-gray-800 dark:text-gray-200">
                             R$ {(item.price * item.quantity).toFixed(2)}
                         </p>
                         <Button
                             variant="outline"
                             size="sm"
                             onClick={handleRemove}
-                            className="mt-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="mt-2 text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-300"
                         >
                             <Trash2 className="w-4 h-4" />
                         </Button>

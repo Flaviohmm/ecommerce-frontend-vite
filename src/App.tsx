@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "./hooks/useTheme";
 import { Header } from "@/components/Header";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
@@ -17,26 +18,28 @@ const queryClient = new QueryClient();
 
 const App = () => (
     <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-                <AuthProvider>
-                    <CartProvider>
-                        <div className="min-h-screen bg-gray-50">
-                            <Header />
-                            <Routes>
-                                <Route path="/" element={<Index />} />
-                                <Route path="/products" element={<Products />} />
-                                <Route path="/cart" element={<Cart />} />
-                                <Route path="/login" element={<Login />} />
-                                <Route path="*" element={<NotFound />} />
-                            </Routes>
-                        </div>
-                    </CartProvider>
-                </AuthProvider>
-            </BrowserRouter>
-        </TooltipProvider>
+        <ThemeProvider>
+            <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                    <AuthProvider>
+                        <CartProvider>
+                            <div className="min-h-screen bg-gray-50">
+                                <Header />
+                                <Routes>
+                                    <Route path="/" element={<Index />} />
+                                    <Route path="/products" element={<Products />} />
+                                    <Route path="/cart" element={<Cart />} />
+                                    <Route path="/login" element={<Login />} />
+                                    <Route path="*" element={<NotFound />} />
+                                </Routes>
+                            </div>
+                        </CartProvider>
+                    </AuthProvider>
+                </BrowserRouter>
+            </TooltipProvider>
+        </ThemeProvider>
     </QueryClientProvider>
 );
 

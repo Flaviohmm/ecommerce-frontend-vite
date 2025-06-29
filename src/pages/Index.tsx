@@ -71,7 +71,7 @@ const Index = () => {
                             <Button
                                 variant="outline"
                                 onClick={() => navigate('/login')}
-                                className="border-white text-gray-500 hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-xl font-semibold transform hover:scale-105 transition-all duration-300"
+                                className="border-white dark:bg-white text-gray-500 hover:bg-white hover:text-blue-600 text-lg px-8 py-4 rounded-xl font-semibold transform hover:scale-105 transition-all duration-300"
                             >
                                 Criar Conta
                                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -82,39 +82,39 @@ const Index = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-20 bg-gray-50">
+            <section className="py-20 bg-gray-50 dark:bg-gray-900">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 dark:text-gray-300 mb-12">
                         Por que escolher nossa loja?
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-950">
                             <CardContent className="pt-6">
-                                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Truck className="w-8 h-8 text-blue-600" />
+                                <div className="bg-blue-100 dark:bg-blue-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Truck className="w-8 h-8 text-blue-600 dark:text-blue-300" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Entrega Rápida</h3>
-                                <p className="text-gray-600">Entregamos em todo o Brasil com rapidez e segurança</p>
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Entrega Rápida</h3>
+                                <p className="text-gray-600 dark:text-gray-300">Entregamos em todo o Brasil com rapidez e segurança</p>
                             </CardContent>
                         </Card>
 
-                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-950">
                             <CardContent className="pt-6">
-                                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <Shield className="w-8 h-8 text-green-600" />
+                                <div className="bg-green-100 dark:bg-green-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Shield className="w-8 h-8 text-green-600 dark:text-green-400" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Compra Segura</h3>
-                                <p className="text-gray-600">Sua segurança é nossa prioridade, dados protegidos</p>
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Compra Segura</h3>
+                                <p className="text-gray-600 dark:text-gray-300">Sua segurança é nossa prioridade, dados protegidos</p>
                             </CardContent>
                         </Card>
 
-                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white">
+                        <Card className="text-center p-6 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 bg-white dark:bg-gray-950">
                             <CardContent className="pt-6">
-                                <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <CreditCard className="w-8 h-8 text-purple-600" />
+                                <div className="bg-purple-100 dark:bg-purple-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <CreditCard className="w-8 h-8 text-purple-600 dark:text-purple-300" />
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Pagamento Fácil</h3>
-                                <p className="text-gray-600">Várias formas de pagamento para sua comodidade</p>
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">Pagamento Fácil</h3>
+                                <p className="text-gray-600 dark:text-gray-300">Várias formas de pagamento para sua comodidade</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -122,13 +122,13 @@ const Index = () => {
             </section>
 
             {/* Produtos em Destaque */}
-            <section className="py-20 bg-white">
+            <section className="py-20 bg-white dark:bg-gray-950">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-gray-200 mb-4">
                             Produtos em Destaque 
                         </h2>
-                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             Confira nossa seleção especial de produtos com os melhores preços
                         </p>
                     </div>
@@ -152,9 +152,9 @@ const Index = () => {
             </section>
 
             {/* Depoimentos */}
-            <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+            <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-950 dark:to-blue-950">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 dark:text-gray-200 mb-12">
                         O que nossos clientes dizem
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -175,15 +175,15 @@ const Index = () => {
                                 comment: "Site fácil de navegar e produtos exatamente como descritos. Recomendo!"
                             }
                         ].map((testimonial, index) => (
-                            <Card key={index} className="p-6 border-0 shadow-lg bg-white">
+                            <Card key={index} className="p-6 border-0 shadow-lg bg-white dark:bg-gray-900">
                                 <CardContent className="pt-6">
                                     <div className="flex items-center gap-1 mb-4">
                                         {[...Array(testimonial.rating)].map((_, i) => (
                                             <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                                         ))}
                                     </div>
-                                    <p className="text-gray-600 mb-4 italic">"{testimonial.comment}"</p>
-                                    <p className="font-semibold text-gray-800">{testimonial.name}</p>
+                                    <p className="text-gray-600 dark:text-gray-400 mb-4 italic">"{testimonial.comment}"</p>
+                                    <p className="font-semibold text-gray-800 dark:text-gray-200">{testimonial.name}</p>
                                 </CardContent>
                             </Card>
                         ))}

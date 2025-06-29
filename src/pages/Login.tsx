@@ -32,19 +32,19 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-blue-950 dark:via-indigo-950 dark:to-purple-950 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="flex items-center justify-center gap-2 mb-4">
                         <ShoppingBag className="w-8 h-8 text-blue-600" />
-                        <h1 className="text-2xl font-bold text-gray-800">E-Commerce</h1>
+                        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200">E-Commerce</h1>
                     </div>
-                    <p className="text-gray-600">Sua loja online favorita</p>
+                    <p className="text-gray-600 dark:text-gray-400">Sua loja online favorita</p>
                 </div>
 
-                <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+                <Card className="shadow-2xl border-0 bg-white/80 dark:bg-gray-950/85 backdrop-blur-sm">
                     <CardHeader className="text-center">
-                        <CardTitle className="text-2xl font-bold text-gray-800">
+                        <CardTitle className="text-2xl font-bold text-gray-800 dark:text-gray-200">
                             {isLogin ? 'Entrar' : 'Criar Conta'}
                         </CardTitle>
                         <CardDescription>
@@ -101,7 +101,7 @@ const Login = () => {
                         </form>
 
                         <div className="mt-6 text-center">
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 dark:text-gray-400">
                                 {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
                             </p>
                             <button

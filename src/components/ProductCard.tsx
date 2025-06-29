@@ -43,7 +43,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         : 0;
 
     return (
-        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white">
+        <Card className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white dark:bg-gray-900">
             <div className="relative overflow-hidden">
                 <img
                     src={product.image}
@@ -78,11 +78,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </span>
                 </div>
 
-                <h3 className="font-bold text-lg text-gray-800 mb-2 line-clamp-2">
+                <h3 className="font-bold text-lg text-gray-800 dark:text-gray-200 mb-2 line-clamp-2">
                     {product.name}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
                     {product.description}
                 </p>
 
@@ -109,7 +109,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
                 {/* Preços */}
                 <div className="flex items-center gap-2 mb-4">
-                    <span className="text-2xl font-bold text-gray-800">
+                    <span className="text-2xl font-bold text-gray-800 dark:text-gray-200">
                         R$ {product.price.toFixed(2)}
                     </span>
                     {product.originalPrice && (

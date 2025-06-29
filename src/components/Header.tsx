@@ -1,9 +1,11 @@
 
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, User, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { ThemeToggle } from "./ThemeToggle";
 
 export const Header = () => {
     const { items } = useCart();
@@ -13,7 +15,7 @@ export const Header = () => {
     const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
     return (
-        <header className="bg-white shadow-lg sticky top-0 z-50">
+        <header className="bg-white dark:bg-gray-900 shadow-lg sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
@@ -31,13 +33,13 @@ export const Header = () => {
                     <nav className="hidden md:flex items-center gap-6">
                         <button
                             onClick={() => navigate('/')}
-                            className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium transition-colors"
                         >
                             Início
                         </button>
                         <button
                             onClick={() => navigate('/products')}
-                            className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium transition-colors"
                         >
                             Produtos
                         </button>
@@ -45,10 +47,13 @@ export const Header = () => {
 
                     {/* Ações do usuário */}
                     <div className="flex items-center gap-4">
+                        {/* Botão de tema */}
+                        <ThemeToggle />
+
                         {/* Carrinho */}
                         <button
                             onClick={() => navigate('/cart')}
-                            className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                            className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
                             <ShoppingCart className="w-6 h-6" />
                             {itemCount > 0 && (
@@ -61,13 +66,13 @@ export const Header = () => {
                         {/* Usuário */}
                         {user ? (
                             <div className="flex items-center gap-2">
-                                <span className="text-gray-700 font-medium hidden sm:block">
+                                <span className="text-gray-700 dark:text-gray-300 font-medium hidden sm:block">
                                     Olá, {user.email}
                                 </span>
                                 <Button
                                     variant="outline"
                                     onClick={logout}
-                                    className="text-gray-700 hover:text-red-600"
+                                    className="text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400"
                                 >
                                     Sair
                                 </Button>

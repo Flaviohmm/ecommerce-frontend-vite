@@ -48,9 +48,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
     }, [selectedCategory, priceRange, inStockOnly]);
 
     return (
-        <Card className="sticky top-4 shadow-lg border-0 bg-white">
+        <Card className="sticky top-4 shadow-lg border-0 bg-white dark:bg-gray-950">
             <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-lg font-bold text-gray-800">
+                <CardTitle className="flex items-center gap-2 text-lg font-bold text-gray-800 dark:text-gray-200">
                     <Filter className="w-5 h-5" />
                     Filtros
                 </CardTitle>
@@ -68,7 +68,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
             <CardContent className="space-y-6">
                 {/* Filtro de Categoria */}
                 <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Categoria</h3>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Categoria</h3>
                     <div className="space-y-2">
                         {categories.map((category) => (
                             <label key={category.id} className="flex items-center gap-2 cursor-pointer">
@@ -78,9 +78,9 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
                                     value={category.id}
                                     checked={selectedCategory === category.id}
                                     onChange={(e) => setSelectCategory(e.target.value)}
-                                    className="text-blue-600 focus:ring-blue-500"
+                                    className="text-blue-600 focus:ring-blue-500 dark:bg-gray-950"
                                 />
-                                <span className="text-gray-700">{category.name}</span>
+                                <span className="text-gray-700 dark:text-gray-300">{category.name}</span>
                             </label>
                         ))}
                     </div>
@@ -88,7 +88,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
 
                 {/* Filtro de Preço */}
                 <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Faixa de Preço</h3>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-300 mb-3">Faixa de Preço</h3>
                     <div className="px-2">
                         <Slider
                             value={priceRange}
@@ -98,7 +98,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
                             step={10}
                             className="mb-4"
                         />
-                        <div className="flex justify-between text-sm text-gray-600">
+                        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                             <span>R$ {priceRange[0]}</span>
                             <span>R$ {priceRange[1]}</span>
                         </div>
@@ -107,7 +107,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
 
                 {/* Filtro de Disponibilidade */}
                 <div>
-                    <h3 className="font-semibold text-gray-800 mb-3">Disponibilidade</h3>
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">Disponibilidade</h3>
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="inStock"
@@ -122,8 +122,8 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
 
                 {/* Resumo dos Filtros */}
                 <div className="pt-4 border-t">
-                    <h4 className="font-medium text-gray-800 mb-2">Filtros Ativos:</h4>
-                    <div className="space-y-1 text-sm text-gray-600">
+                    <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Filtros Ativos:</h4>
+                    <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                         <div>Categoria: {categories.find(c => c.id === selectedCategory)?.name}</div>
                         <div>Preço: R$ {priceRange[0]} - R$ {priceRange[1]}</div>
                         {inStockOnly && <div>Apenas em estoque</div>}

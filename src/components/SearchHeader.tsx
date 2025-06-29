@@ -22,7 +22,7 @@ export const SearchHeader: React.FC<SearchHeaderProps> = ({ onSearch }) => {
     };
 
     return (
-        <div className="bg-white shadow-sm border-b">
+        <div className="bg-white dark:bg-gray-950 shadow-sm border-b">
             <div className="container mx-auto px-4 py-4">
                 <form onSubmit={handleSearch} className="flex items-center gap-4 max-w-2xl mx-auto">
                     <div className="relative flex-1">
