@@ -9,10 +9,12 @@ import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, ShoppingBag } from "lucide-react";
 
 const Login = () => {
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLogin, setIsLogin] = useState(true);
+    const [registrationSuccess, setRegistrationSuccess] = useState(false);
     const { login, register } = useAuth();
     const navigate = useNavigate();
 
@@ -22,10 +24,15 @@ const Login = () => {
         try {
             if (isLogin) {
                 await login(email, password);
+                navigate('/products')
             } else {
-                await register(email, password);
+                await register(name, email, password);
+                setRegistrationSuccess(true);
+                setIsLogin(true);
+                setName('');
+                setPassword('');
+                console.log('Conta criada com sucesso! Agora faça login.');
             }
-            navigate('/products');
         } catch (error) {
             console.error('Erro de autenticação:', error);
         }
@@ -53,10 +60,30 @@ const Login = () => {
                                 : 'Crie sua conta para começar a comprar'
                             }
                         </CardDescription>
+                        {registrationSuccess && (
+                            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-2">
+                                Conta criada com sucesso! Agora faça login.
+                            </div>
+                        )}
                     </CardHeader>
 
                     <CardContent>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                            {!isLogin && (
+                                <div className="space-y-2">
+                                    <Label htmlFor="name">Nome</Label>
+                                    <Input
+                                        id="name"
+                                        type="text"
+                                        placeholder="Seu nome completo"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        required
+                                        className="h-12 px-4 rounded-xl"
+                                    />
+                                </div>
+                            )}
+
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
@@ -105,7 +132,10 @@ const Login = () => {
                                 {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
                             </p>
                             <button
-                                onClick={() => setIsLogin(!isLogin)}
+                                onClick={() => {
+                                    setIsLogin(!isLogin);
+                                    setRegistrationSuccess(false);
+                                }}
                                 className="text-blue-600 hover:text-blue-700 font-semibold mt-1 transition-colors"
                             >
                                 {isLogin ? 'Criar conta' : 'Fazer login'}

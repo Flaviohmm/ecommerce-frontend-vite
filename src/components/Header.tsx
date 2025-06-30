@@ -67,7 +67,7 @@ export const Header = () => {
                         {user ? (
                             <div className="flex items-center gap-2">
                                 <span className="text-gray-700 dark:text-gray-300 font-medium hidden sm:block">
-                                    Olá, {user.email}
+                                    Olá, {user.name}
                                 </span>
                                 <Button
                                     variant="outline"
