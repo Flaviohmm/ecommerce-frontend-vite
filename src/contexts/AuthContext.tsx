@@ -7,12 +7,14 @@ interface User {
     name?: string;
 }
 
-interface StoredUser extends User {
-    password: string;
+interface AuthResponse {
+    token: string;
+    user: User;
 }
 
 interface AuthContextType {
     user: User | null;
+    token: string | null;
     login: (email: string, password: string) => Promise<void>;
     register: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
@@ -21,57 +23,39 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Simulação de "banco de dados" em localStorage para usuários registrados
-const getStoredUsers = (): StoredUser[] => {
-    const users = localStorage.getItem('registered_users');
-    return users ? JSON.parse(users) : [];
-};
+// Configuração da URL base da API
+const API_BASE_URL = 'http://localhost:8080';
 
-const saveUser = (user: User, password: string) => {
-    const users = getStoredUsers();
-    const userWithPassword: StoredUser = { ...user, password };
-    const existingIndex = users.findIndex(u => u.email === user.email);
-
-    if (existingIndex >= 0) {
-        users[existingIndex] = userWithPassword;
-    } else {
-        users.push(userWithPassword);
-    }
-
-    localStorage.setItem('registered_users', JSON.stringify(users));
-};
-
-const findUser = (email: string, password: string): User | null => {
-    const users = getStoredUsers();
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (user) {
-        // Remove password from returned user object
-        const { password: _, ...userWithoutPassword } = user;
-        return userWithoutPassword as User;
-    }
-
-    return null;
-};
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
 
     const login = async (email: string, password: string) => {
         setIsLoading(true);
         try {
-            // Simulação de login - verificar usuários registrados
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
 
-           const foundUser = findUser(email, password);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao fazer login');
+            }
 
-           if (foundUser) {
-            setUser(foundUser);
-            localStorage.setItem('current_user', JSON.stringify(foundUser));
-           } else {
-            throw new Error('Credenciais inválidas');
-           }
+            const authResponse: AuthResponse = await response.json();
+
+            setUser(authResponse.user);
+            setToken(authResponse.token);
+
+            // Salvar no localStorage
+            localStorage.setItem('auth_token', authResponse.token);
+            localStorage.setItem('current_user', JSON.stringify(authResponse.user));
         } catch (error) {
             throw error;
         } finally {
@@ -82,17 +66,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const register = async (name: string, email: string, password: string) => {
         setIsLoading(true);
         try {
-            // Simulação de registro - salvar usuário para login posterior
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password }),
+            });
 
-            const newUser: User = {
-                id: Date.now().toString(),
-                email: email,
-                name: name
-            };
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao registrar usuário');
+            }
 
-            // Salvar usuário para login posterior (não loga automaticamente)
-            saveUser(newUser, password);
+            // Registro bem-sucedido - não loga automaticamente
+            // O controller retorna { message: "Conta criada com sucesso! Agora faça login." }
             
         } catch (error) {
             throw error;
@@ -103,13 +91,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logout = () => {
         setUser(null);
+        setToken(null);
+        localStorage.removeItem('auth_token');
         localStorage.removeItem('current_user');
     };
 
-    // Verificar se há usuário salvo no localStorage ao inicializar
+    // Verificar se há usuário e token salvos no localStorage ao inicializar
     React.useEffect(() => {
+        const savedToken = localStorage.getItem('auth_token');
         const savedUser = localStorage.getItem('current_user');
-        if (savedUser) {
+
+        if (savedToken && savedUser) {
+            setToken(savedToken);
             setUser(JSON.parse(savedUser));
         }
     }, []);
@@ -117,6 +110,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     return (
         <AuthContext.Provider value={{
             user,
+            token,
             login,
             register,
             logout,
@@ -133,4 +127,44 @@ export const useAuth = () => {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;
+};
+
+// Hook utilitário para fazer requisições autenticadas
+export const useAuthenticatedFetch = () => {
+    const { token, logout } = useAuth();
+
+    const authenticatedFetch = async (url: string, options: RequestInit = {}) => {
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+        };
+
+        // Adicionar headers existentes
+        if (options.headers) {
+            Object.entries(options.headers).forEach(([key, value]) => {
+                if (typeof value === 'string') {
+                    headers[key] = value;
+                }
+            });
+        }
+
+        // Adicionar token de autorização se disponível
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        const response = await fetch(url, {
+            ...options,
+            headers,
+        });
+
+        // Se receber 401 (Unauthorized), fazer logout automático
+        if (response.status === 401) {
+            logout();
+            throw new Error('Sessão expirada. Faça login novamente.');
+        }
+
+        return response;
+    };
+
+    return authenticatedFetch;
 };
