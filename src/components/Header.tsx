@@ -33,16 +33,24 @@ export const Header = () => {
                     <nav className="hidden md:flex items-center gap-6">
                         <button
                             onClick={() => navigate('/')}
-                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium transition-colors"
+                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
                         >
                             Início
                         </button>
                         <button
                             onClick={() => navigate('/products')}
-                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 font-medium transition-colors"
+                            className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
                         >
                             Produtos
                         </button>
+                        {user && (
+                            <button
+                                onClick={() => navigate('/admin')}
+                                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
+                            >
+                                Admin
+                            </button>
+                        )}
                     </nav>
 
                     {/* Ações do usuário */}
