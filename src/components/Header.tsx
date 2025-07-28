@@ -43,7 +43,7 @@ export const Header = () => {
                         >
                             Produtos
                         </button>
-                        {user && (
+                        {user?.role === 'admin' && (
                             <button
                                 onClick={() => navigate('/admin')}
                                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
@@ -86,13 +86,22 @@ export const Header = () => {
                                 </Button>
                             </div>
                         ) : (
-                            <Button
-                                onClick={() => navigate('/login')}
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
-                            >
-                                <User className="w-4 h-4 mr-2" />
-                                Entrar
-                            </Button>
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    onClick={() => navigate('/login')}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                                >
+                                    <User className="w-4 h-4 mr-2" />
+                                    Entrar
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={() => navigate('/admin-login')}
+                                    className="text-orange-600 border-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950"
+                                >
+                                    Admin
+                                </Button>
+                            </div>
                         )}
                     </div>
                 </div>

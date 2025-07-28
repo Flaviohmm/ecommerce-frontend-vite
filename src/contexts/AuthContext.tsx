@@ -1,10 +1,11 @@
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface User {
     id: string;
     email: string;
-    name?: string;
+    name: string;
+    role: string;
 }
 
 interface AuthResponse {
@@ -16,8 +17,11 @@ interface AuthContextType {
     user: User | null;
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
+    loginAdmin: (email: string, password: string) => Promise<void>;
     register: (name: string, email: string, password: string) => Promise<void>;
     logout: () => void;
+    isAuthenticated: () => boolean;
+    isAdmin: () => boolean;
     isLoading: boolean;
 }
 
@@ -31,6 +35,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<User | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Carregar dados do localStorage na inicialização
+    useEffect(() => {
+        const savedToken = localStorage.getItem('token');
+        const savedUser = localStorage.getItem('user');
+
+        if (savedToken && savedUser) {
+            try {
+                setToken(savedToken);
+                setUser(JSON.parse(savedUser));
+                console.log('✅ Dados de autenticação carregados do localStorage');
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados do localStorage:', error);
+                // Limpar dados corrompidos
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        }
+
+        setIsLoading(false);
+    }, []);
 
     const login = async (email: string, password: string) => {
         setIsLoading(true);
@@ -54,9 +79,41 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setToken(authResponse.token);
 
             // Salvar no localStorage
-            localStorage.setItem('auth_token', authResponse.token);
-            localStorage.setItem('current_user', JSON.stringify(authResponse.user));
+            localStorage.setItem('token', authResponse.token);
+            localStorage.setItem('user', JSON.stringify(authResponse.user));
         } catch (error) {
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const loginAdmin = async (email: string, password: string) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/auth/login-admin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao fazer login como admin');
+            }
+
+            const authResponse: AuthResponse = await response.json();
+            console.log('✅ Login admin bem-sucedido:', authResponse.user.email);
+
+            // Salvar no estado e localStorage
+            setUser(authResponse.user);
+            setToken(authResponse.token);
+            localStorage.setItem('token', authResponse.token);
+            localStorage.setItem('user', JSON.stringify(authResponse.user));
+        } catch (error) {
+            console.error('❌ Erro no login admin:', error);
             throw error;
         } finally {
             setIsLoading(false);
@@ -81,7 +138,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
             // Registro bem-sucedido - não loga automaticamente
             // O controller retorna { message: "Conta criada com sucesso! Agora faça login." }
-            
+
         } catch (error) {
             throw error;
         } finally {
@@ -94,6 +151,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setToken(null);
         localStorage.removeItem('auth_token');
         localStorage.removeItem('current_user');
+    };
+
+    const isAuthenticated = (): boolean => {
+        return !!(user && token);
+    };
+
+    const isAdmin = (): boolean => {
+        return user?.role === 'admin';
     };
 
     // Verificar se há usuário e token salvos no localStorage ao inicializar
@@ -112,8 +177,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             user,
             token,
             login,
+            loginAdmin,
             register,
             logout,
+            isAuthenticated,
+            isAdmin,
             isLoading
         }}>
             {children}
