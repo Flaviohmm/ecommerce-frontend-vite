@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Trash2, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { Plus, Edit, Trash2, AlertCircle, CheckCircle, XCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Product {
@@ -215,7 +215,7 @@ const AdminProductManager: React.FC = () => {
 
         if (!formData.name.trim()) errors.name = 'Nome é obrigatório';
         if (formData.price <= 0) errors.price = 'Preço deve ser positivo';
-        if (formData.originalPrice<= 0) errors.originalPrice = 'Preço original deve ser positivo';
+        if (formData.originalPrice <= 0) errors.originalPrice = 'Preço original deve ser positivo';
         if (!formData.image.trim()) errors.image = 'URL da imagem é obrigatória';
         if (!formData.category.trim()) errors.category = 'Categoria é obrigatória';
         if (!formData.description.trim()) errors.description = 'Descrição é obrigatória';
@@ -579,12 +579,22 @@ const AdminProductManager: React.FC = () => {
                                                 <TableCell>{product.stockQuantity}</TableCell>
                                                 <TableCell>
                                                     <span
-                                                        className={`px-2 py-1 rounded-full text-xs font-medium ${product.inStock
+                                                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${product.inStock && product.stockQuantity > 0
                                                             ? 'bg-green-100 text-green-800'
                                                             : 'bg-red-100 text-red-800'
                                                             }`}
                                                     >
-                                                        {product.inStock ? 'Em Estoque' : 'Esgotado'}
+                                                        {product.inStock && product.stockQuantity > 0 ? (
+                                                            <>
+                                                                <CheckCircle className="w-3 h-3" />
+                                                                Em Estoque
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <XCircle className="w-3 h-3" />
+                                                                Esgotado
+                                                            </>
+                                                        )}
                                                     </span>
                                                 </TableCell>
                                                 <TableCell>{product.rating}/5</TableCell>

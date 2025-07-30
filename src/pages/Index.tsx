@@ -47,18 +47,16 @@ const Index = () => {
                 }
             });
 
-            console.log('Authorization: Bearer ', token);
-
             if (!response.ok) {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
 
             const products: Product[] = await response.json();
 
-            // Filtrar apenas produtos em estoque e pegar os 6 primeiros para destaque
+            // Filtrar apenas produtos em estoque e pegar os 3 primeiros para destaque
             const inStockProducts = products
                 .filter(product => product.inStock && product.stockQuantity && product.stockQuantity > 0)
-                .slice(0, 6);
+                .slice(0, 3);
 
             setFeaturedProducts(inStockProducts);
         } catch (err: any) {

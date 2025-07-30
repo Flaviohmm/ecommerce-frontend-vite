@@ -22,6 +22,16 @@ interface ProductCardProps {
     product: Product;
 }
 
+// Função para formatar preço no padrão brasileiro
+const formatBRL = (value: number): string => {
+    return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+};
+
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const { addItem } = useCart();
 
@@ -110,11 +120,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 {/* Preços */}
                 <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                        R$ {product.price.toFixed(2)}
+                        {formatBRL(product.price)}
                     </span>
                     {product.originalPrice && (
                         <span className="text-sm text-gray-500 line-through">
-                            R$ {product.originalPrice.toFixed(2)}
+                            {formatBRL(product.originalPrice)}
                         </span>
                     )}
                 </div>

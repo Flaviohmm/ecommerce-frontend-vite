@@ -6,21 +6,78 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Filter, X } from "lucide-react";
 
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+    originalPrice: number;
+    image: string;
+    category: string;
+    rating: number;
+    inStock: boolean;
+    description: string;
+    stockQuantity?: number;
+}
+
 interface ProductFiltersProps {
     onFiltersChange: (filters: any) => void;
 }
 
+// Função para formatar preço no padrão brasileiro
+const formatBRL = (value: number): string => {
+    return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+};
+
 export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange }) => {
-    const [selectedCategory, setSelectCategory] = useState('all');
-    const [priceRange, setPriceRange] = useState([0, 2000]);
+    const [allProducts, setAllProducts] = useState<Product[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [priceRange, setPriceRange] = useState([0, 20000]);
     const [inStockOnly, setInStockOnly] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    const token = localStorage.getItem('auth_token');
+
+    // Função para buscar produtos do backend
+    const fetchProducts = async () => {
+        try {
+            setLoading(true);
+            setError('');
+
+            // Buscar produtos dísponível
+            const response = await fetch('http://localhost:8080/api/products', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            const products = await response.json();
+            setAllProducts(products);
+        } catch (err) {
+            console.error('Erro ao buscar produtos:', err);
+            setError('Não foi possível carregar os produtos. Usando dados de exemplo.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const categories = [
-        { id: 'all', name: 'Todas as Categorias' },
-        { id: 'electronics', name: 'Eletrônicos' },
-        { id: 'fashion', name: 'Moda' },
-        { id: 'home', name: 'Casa' },
-        { id: 'sports', name: 'Esportes' },
+        { id: '', name: 'Todas as Categorias' },
+        { id: 'Electronics', name: 'Eletrônicos' },
+        { id: 'Fashion', name: 'Moda' },
+        { id: 'Home', name: 'Casa' },
+        { id: 'Sports', name: 'Esportes' },
+        { id: 'Books', name: 'Livros' },
+        { id: 'Beauty', name: 'Beleza' },
     ];
 
     const applyFilters = () => {
@@ -33,19 +90,23 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
     };
 
     const clearFilters = () => {
-        setSelectCategory('all');
-        setPriceRange([0, 2000]);
+        // Resetar todos os estados dos filtros
         setInStockOnly(false);
-        onFiltersChange({
-            category: 'all',
-            priceRange: [0, 2000],
+
+        // Aplicar filtros limpos imediatamente
+        const clearedFilters = {
             inStock: false,
-        });
+        };
+        onFiltersChange(clearedFilters);
     };
 
     React.useEffect(() => {
+        fetchProducts();
+    }, []); // Buscar produtos apenas uma vez na montagem
+
+    React.useEffect(() => {
         applyFilters();
-    }, [selectedCategory, priceRange, inStockOnly]);
+    }, [selectedCategory, priceRange, inStockOnly]); // Aplicar filtros quando houver mudanças
 
     return (
         <Card className="sticky top-4 shadow-lg border-0 bg-white dark:bg-gray-950">
@@ -73,11 +134,11 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
                         {categories.map((category) => (
                             <label key={category.id} className="flex items-center gap-2 cursor-pointer">
                                 <input
-                                    type="text"
+                                    type="radio"
                                     name="category"
                                     value={category.id}
                                     checked={selectedCategory === category.id}
-                                    onChange={(e) => setSelectCategory(e.target.value)}
+                                    onChange={(e) => setSelectedCategory(e.target.value)}
                                     className="text-blue-600 focus:ring-blue-500 dark:bg-gray-950"
                                 />
                                 <span className="text-gray-700 dark:text-gray-300">{category.name}</span>
@@ -93,14 +154,14 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
                         <Slider
                             value={priceRange}
                             onValueChange={setPriceRange}
-                            max={2000}
+                            max={20000}
                             min={0}
                             step={10}
                             className="mb-4"
                         />
                         <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                            <span>R$ {priceRange[0]}</span>
-                            <span>R$ {priceRange[1]}</span>
+                            <span>{formatBRL(priceRange[0])}</span>
+                            <span>{formatBRL(priceRange[1])}</span>
                         </div>
                     </div>
                 </div>
@@ -125,7 +186,7 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
                     <h4 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Filtros Ativos:</h4>
                     <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
                         <div>Categoria: {categories.find(c => c.id === selectedCategory)?.name}</div>
-                        <div>Preço: R$ {priceRange[0]} - R$ {priceRange[1]}</div>
+                        <div>Preço: {formatBRL(priceRange[0])} - R$ {formatBRL(priceRange[1])}</div>
                         {inStockOnly && <div>Apenas em estoque</div>}
                     </div>
                 </div>
