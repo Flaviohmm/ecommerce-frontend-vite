@@ -6,19 +6,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Filter, X } from "lucide-react";
 
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    originalPrice: number;
-    image: string;
-    category: string;
-    rating: number;
-    inStock: boolean;
-    description: string;
-    stockQuantity?: number;
-}
-
 interface ProductFiltersProps {
     onFiltersChange: (filters: any) => void;
 }
@@ -34,41 +21,9 @@ const formatBRL = (value: number): string => {
 };
 
 export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange }) => {
-    const [allProducts, setAllProducts] = useState<Product[]>([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [priceRange, setPriceRange] = useState([0, 20000]);
     const [inStockOnly, setInStockOnly] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-
-    const token = localStorage.getItem('auth_token');
-
-    // Função para buscar produtos do backend
-    const fetchProducts = async () => {
-        try {
-            setLoading(true);
-            setError('');
-
-            // Buscar produtos dísponível
-            const response = await fetch('http://localhost:8080/api/products', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Erro HTTP: ${response.status}`);
-            }
-
-            const products = await response.json();
-            setAllProducts(products);
-        } catch (err) {
-            console.error('Erro ao buscar produtos:', err);
-            setError('Não foi possível carregar os produtos. Usando dados de exemplo.');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const categories = [
         { id: '', name: 'Todas as Categorias' },
@@ -91,18 +46,18 @@ export const ProductFilters: React.FC<ProductFiltersProps> = ({ onFiltersChange 
 
     const clearFilters = () => {
         // Resetar todos os estados dos filtros
+        setSelectedCategory('');
+        setPriceRange([0, 20000]);
         setInStockOnly(false);
 
         // Aplicar filtros limpos imediatamente
         const clearedFilters = {
+            category: '',
+            priceRange: [0, 20000],
             inStock: false,
         };
         onFiltersChange(clearedFilters);
     };
-
-    React.useEffect(() => {
-        fetchProducts();
-    }, []); // Buscar produtos apenas uma vez na montagem
 
     React.useEffect(() => {
         applyFilters();
